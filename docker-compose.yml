@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  vue-app:
+    container_name: vue-app
+    stdin_open: true
+    build: ./test-front
+    ports: 
+      - "8080:8080"
+    networks: 
+      - mevn-app
+  api-server:
+    container_name: express-mongo
+    restart: always
+    build: ./test-back
+    networks: 
+      - mevn-app
+    ports:
+      - "3001:3001"
+    links: 
+      - mongodb
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - mevn-app
+    volumes:
+      - mongo-data:/data/db
+networks:
+  mevn-app:
+    driver: bridge
+volumes:
+  mongo-data:
+    driver: local
